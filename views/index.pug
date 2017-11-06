@@ -1,0 +1,17 @@
+extends layout
+
+block content
+  h1= title
+  p Welcome to #{title}
+  p Please build your request:
+  div#inputlist
+  div#buttons.margintop
+    button#add Add
+    button#remove Remove last
+    button#set Finish
+    span#createspan.block
+      button#create(disabled) Request table creation
+    span#postspan.block
+      button#post(disabled) Submit log
+
+  script(src="/javascripts/main.js")
