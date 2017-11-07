@@ -10,16 +10,19 @@ router.post('/', function(req, res, next) {
   const columnnames = req.body['columnnames[]'];
   const values = req.body['values[]'];
   const hash = req.body['hash'];
+  const cid = req.body['cid'];
 
   returnstring = 'Received ' + values;
   res.send({returnstring});
 
-  var query = 'INSERT INTO ' + hash + ' (';
+  var query = 'INSERT INTO log_' + hash + ' (time, cid, ';
   for (name in columnnames) {
     query += columnnames[name] + ', ';
   }
   query = query.substring(0, query.length-2); // Snippet that removes last 2 chars
-  query += ') VALUES \n( ';
+  query +=
+  `) VALUES
+  ( "${Date.now()}", "${cid}", `;
   for (val in values) {
     query += `"${values[val]}", `;
   }

@@ -3,3 +3,5 @@ CREATE TABLE log_index (
     hash 			VARCHAR(50) NOT NULL,
     PRIMARY KEY 	(id)
 );
+
+SELECT * FROM `log_e69f445300515a4e24b3d6128633a50a`;

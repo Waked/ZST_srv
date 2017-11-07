@@ -18,22 +18,22 @@ router.post('/', function(req, res, next) {
   var returnstring = '';
 
   // Use db connection made in app.js
-  con.query('SHOW TABLES', function(err, result) {
+  con.query('SHOW TABLES', function(err, results) {
     if (err) throw err;
-    console.log(result);
-    const tables = result[0];
+    console.log(results);
     var existsTable = false;
-    for (var table in tables) {
-      if (tables[table] === hash)
+    for (var i in results) {
+      if (results[i]['Tables_in_logs'] === "log_" + hash)
         existsTable = true;
     }
     if (existsTable) {
       console.log('Table already exists.');
-      returnstring = 'Log DB already exists.';
+      returnstring = 'Already exists.';
     } else {
-      returnstring = 'Log DB created.';
+      returnstring = 'Created.';
       createTable();
     }
+    returnstring += ' md5=' + hash;
     res.send({returnstring, hash});
   });
 
@@ -44,9 +44,11 @@ router.post('/', function(req, res, next) {
     }
     querybody = querybody.substring(0, querybody.length-2);
     const query_create =
-    `CREATE TABLE ${hash} (
+    `CREATE TABLE log_${hash} (
      id INT unsigned NOT NULL AUTO_INCREMENT,
      PRIMARY KEY (id),
+     time VARCHAR(30),
+     cid VARCHAR(100),
      ${querybody}
      )`;
      console.log(query_create);

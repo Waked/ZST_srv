@@ -41,7 +41,11 @@ $(() => {
     newspan.appendChild(newinput);
     inputlist.append(newspan); // .append(), because it's a jQuery element
     //inputlist.append(document.createElement("br"));
-    $(newinput).focus(); // Place focus in new input
+    $(newinput).focus().keyup(function(event) {
+      if (event.keyCode === 13) {
+        $(addbutton).click();
+      }
+    }); // Place focus in new input
     console.log("Added input");
   }
 
@@ -96,7 +100,6 @@ $(() => {
         console.log(data);
         $('#srvresponse').text(data['returnstring']);  // a message after POST
         hash = data['hash'];
-        createbutton.prop('disabled', true);
         postbutton.prop('disabled', false);
       },
       error: function() {
@@ -106,27 +109,33 @@ $(() => {
   }
 
   function postRequest() {
-    var isValid = true;
+    var isvalid = true;
+    const cid = $('#cid').val();
+    console.log("CID: " + cid);
     // Form validation
-    for (let i = 0; i < inputcount; i++) {
-      if (inputs2[i].value == '' || inputs2[i].value == null) {
-        isvalid = false;
-        break;
+    if (cid == '' || cid == null) { // Client ID is required
+      isvalid = false;
+    } else {
+      for (let i = 0; i < inputcount; i++) { // Fields must not be empty
+        if (inputs2[i].value == '' || inputs2[i].value == null) {
+          isvalid = false;
+          break;
+        }
       }
     }
-    if (isValid) {
+    if (isvalid) {
       // Execute filling in log table
       for (let i = 0; i < inputcount; i++) {
         const currinput2 = inputs2[i];
         values.push(currinput2.value); // Add column name to list
-        $(currinput2).text('') // Clear input for another use
+        $(currinput2).val('') // Clear input for another use
       }
       // Send data
       console.log("Hash before sending: " + hash);
       $.ajax({
         method: 'POST',
         url: '/add_log',
-        data: { columnnames, values, hash },
+        data: { columnnames, values, hash, cid },
         success: function(data, status) {
           console.log("Success! Received: ");
           console.log(data);

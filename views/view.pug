@@ -1,0 +1,32 @@
+extends layout
+
+block content
+  ul
+    each val in tablelist
+      li
+        a(href='/view/' + val)= val
+        
+  if table
+    table#table.display(width="100%", cellspacing="0")
+      thead
+        tr
+          each val, key in table.results[0]
+            th= key
+          th Edit
+      tfoot
+        tr
+          each val, key in table.results[0]
+            th= key
+          th Edit
+      tbody
+        each result in table.results
+          tr
+            each val in result
+              th= val
+            th
+              a(href='/view/' + tableid + '/' + result['id']) Delete
+          
+
+  link(rel='stylesheet', href='https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css')
+  script(src='https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js')
+  script(src='/javascripts/client_view.js')
